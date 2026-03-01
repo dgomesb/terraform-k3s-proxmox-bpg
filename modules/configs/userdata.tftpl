@@ -1,0 +1,89 @@
+#cloud-config
+# vim: syntax=yaml
+# examples: https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+---
+package_update: true
+#package_upgrade: true
+
+hostname: ${hostname}
+fqdn: ${hostname}.${net_domain[0]}
+create_hostname_file: true
+prefer_fqdn_over_hostname: true
+
+timezone: America/Vancouver
+
+chpasswd:
+  users:
+    - { name: root, password: ${password} }
+  expire: false
+
+users:
+  - name: ${username}
+    passwd: ${password}
+    groups: adm,sudo,users
+    shell: /bin/bash
+    lock_passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+%{ for key in ssh_pub_keys ~}
+      - ${key}
+%{ endfor ~}
+
+packages:
+  - curl
+  - qemu-guest-agent
+  - vim
+
+%{ if length(extra_disks) == 0 }
+mounts:
+  - [ "${dir_mapping.name}", "${dir_mapping.guest_path}", "virtiofs", "defaults", "0", "0" ]
+  - [ "swap", "none" ]
+%{ else }
+disk_setup:
+%{ for idx, disk in extra_disks ~}
+  "/dev/sd${disk.device_letter}": { table_type: gpt, layout: true, overwrite: true }
+%{ endfor ~}
+
+fs_setup:
+%{ for idx, disk in extra_disks ~}
+  - device: "/dev/sd${disk.device_letter}1"
+    filesystem: ext4
+    label: "data-sd${disk.device_letter}"
+%{ endfor ~}
+
+mounts:
+  - [ "${dir_mapping.name}", "${dir_mapping.guest_path}", "virtiofs", "defaults", "0", "0" ]
+  - [ "swap", "none" ]
+%{ for idx, disk in extra_disks ~}
+  - [ "/dev/sd${disk.device_letter}1", "${disk.guest_path}", "ext4", "defaults", "0", "0" ]
+%{ endfor ~}
+%{ endif ~}
+
+write_files:
+  - path: /etc/hosts
+    content: |
+      ## Managed by terraform ##
+      127.0.0.1  ${hostname}  ${join("  ", [for d in net_domain : "${hostname}.${d}"])}
+      ${all_nodes}
+    append: true
+
+  - path: /etc/systemd/system/setupk3s.service
+    content: |
+      ${service}
+    permissions: '0644'
+
+  - path: /usr/local/bin/setupk3s
+    content: |
+      ${setupk3s}
+    permissions: '0755'
+
+runcmd:
+  - systemctl daemon-reload
+  - systemctl enable setupk3s.service
+
+final_message: 'cloud-init is awesome'
+
+power_state:
+  #timeout: 10  ## in seconds
+  mode: reboot
+  condition: grep -q "cloud-init is awesome" /var/log/cloud-init.log

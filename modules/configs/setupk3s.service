@@ -1,0 +1,12 @@
+[Unit]
+Description=Setup K3s First Boot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/setupk3s
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

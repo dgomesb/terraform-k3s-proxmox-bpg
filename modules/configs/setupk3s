@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+K3S_URL="https://get.k3s.io"
+TOKEN_FILE="${dir_mapping.guest_path}/token-${token_id}"
+ARG_TLS_SAN="--tls-san=${main_server}"
+SHORT_NAME=$(cut -d. -f1 <<< "${main_server}")
+NICK_NAME=$(cut -d. -f1 <<< "${main_server}" | sed 's/[0-9]*$//')
+
+user_config() {
+  if [ -f /etc/rancher/k3s/k3s.yaml ]; then
+    sed -i "s/127.0.0.1/${main_server}/g" /etc/rancher/k3s/k3s.yaml
+    install -d -m 750 /home/${username}/.kube
+    install -m 600 /etc/rancher/k3s/k3s.yaml /home/${username}/.kube/config
+    chown -R ${username}:${username} /home/${username}/.kube
+    cat <<'EOL' >> /home/${username}/.bashrc
+export KUBECONFIG=$HOME/.kube/config
+source <(kubectl completion bash)
+EOL
+  fi
+}
+
+check_k3s () {
+  if systemctl is-active --quiet k3s 2>/dev/null; then
+    systemctl disable setupk3s.service || true
+    systemctl stop setupk3s.service || true
+    exit 0
+  fi
+}
+
+install_k3s() {
+  [ -n "${k3s_version}" ] && export INSTALL_K3S_VERSION="v${k3s_version}"
+  curl -sfL "$K3S_URL" | sh -s - server --cluster-init "$ARG_TLS_SAN"
+  until [ -f /var/lib/rancher/k3s/server/token ]; do
+    sleep 2
+  done
+  install -m 644 /var/lib/rancher/k3s/server/token "$TOKEN_FILE"
+  user_config
+  check_k3s
+}
+
+join_node () {
+  local extra_args=()
+  [ "$1" = "server" ] && extra_args+=($ARG_TLS_SAN)
+  until [ -f "$TOKEN_FILE" ]; do
+    sleep 3
+  done
+  export K3S_TOKEN_FILE="$TOKEN_FILE"
+  [ -n "${k3s_version}" ] && export INSTALL_K3S_VERSION="v${k3s_version}"
+  curl -sfL "$K3S_URL" | sh -s - "$1" --server "https://${main_server}:6443" "$${extra_args[@]}"
+  user_config
+  check_k3s
+}
+
+check_k3s
+
+case "$(hostname -s)" in
+  "$${SHORT_NAME}") install_k3s ;;
+  "$${NICK_NAME}"*) join_node server ;;
+                 *) join_node agent ;;
+esac
+
+exit 0

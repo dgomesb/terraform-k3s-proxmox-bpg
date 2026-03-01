@@ -1,0 +1,28 @@
+# https://documentation.ubuntu.com/server/explanation/networking/configuring-networks/
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    all:
+      match:
+        name: "enp*"
+        driver: virtio_net
+%{ if address == "" }
+      dhcp4: true
+%{ else }
+      addresses:
+      - ${address}
+      nameservers:
+        addresses:
+%{ for srv in dns_servers }
+        - ${srv}
+%{ endfor ~}
+        search:
+%{ for fqdn in net_domain }
+        - ${fqdn}
+%{ endfor ~}
+      routes:
+      - to: default
+        via: ${igw}
+%{ endif }
