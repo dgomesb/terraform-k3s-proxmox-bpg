@@ -13,12 +13,14 @@ variable "pve_token_id" {
   description = "Proxmox API Token Name."
   type        = string
   sensitive   = true
+  ephemeral   = true
 }
 
 variable "pve_token_secret" {
   description = "Proxmox API Token Value."
   type        = string
   sensitive   = true
+  ephemeral   = true
 }
 
 variable "pve_ssh_user" {
@@ -35,12 +37,14 @@ variable "pve_ssh_private_key" {
 #variable "pve_user" {
 #  description = "The Proxmox user account used to authenticate against the API (e.g., user@pam)."
 #  type        = string
+#  ephemeral   = true
 #}
 
 #variable "pve_password" {
 #  description = "The password for the Proxmox API user."
 #  type        = string
 #  sensitive   = true
+#  ephemeral   = true
 #}
 
 ## Proxmox Node ##

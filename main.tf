@@ -3,7 +3,7 @@ locals {
   count_servers = 2
   count_workers = 3
 
-  k3s_version = "1.35.1+k3s1" ## https://github.com/k3s-io/k3s/releases
+  k3s_version = "1.35.2+k3s1" ## https://github.com/k3s-io/k3s/releases
 
   main_server = format("%s01.%s", module.server.hostname, var.net_domain[0])
 
@@ -11,6 +11,14 @@ locals {
     module.server.hosts_list,
     module.worker.hosts_list
   )
+
+  base_image_file = "noble-server-cloudimg-amd64.qcow2"
+
+  search_base_image = [
+    for f in data.proxmox_files.base_image.files : f
+    if f.file_name == local.base_image_file
+  ]
+
 }
 
 resource "random_integer" "token_id" {
@@ -23,25 +31,19 @@ resource "proxmox_virtual_environment_hardware_mapping_dir" "add" {
   name    = "k3s"
   map = [{
     node = var.node_name
-    path = "/tmp" ## this path must exist on the node
+    path = "/var/tmp" ## this path must exist on the node
   }]
 }
 
-data "proxmox_virtual_environment_file" "ubuntu_noble" {
-
+data "proxmox_files" "base_image" {
   node_name    = var.node_name
   datastore_id = var.datastore_id
   content_type = "import"
-
-  #file_name = "ubuntu-24.04-minimal-cloudimg-amd64.qcow2"
-  file_name = "noble-server-cloudimg-amd64.qcow2"
-
 }
 
-### https://github.com/bpg/terraform-provider-proxmox/issues/2566 ###
-resource "proxmox_virtual_environment_download_file" "ubuntu_noble" {
+resource "proxmox_virtual_environment_download_file" "base_image" {
 
-  count = data.proxmox_virtual_environment_file.ubuntu_noble.id == null ? 1 : 0
+  count = length(local.search_base_image) == 0 ? 1 : 0
 
   node_name    = var.node_name
   datastore_id = var.datastore_id
@@ -49,10 +51,10 @@ resource "proxmox_virtual_environment_download_file" "ubuntu_noble" {
 
   ## Ubuntu minimal does not support uefi
   #url       = "https://cloud-images.ubuntu.com/minimal/releases/noble/release/ubuntu-24.04-minimal-cloudimg-amd64.img"
-  #file_name = "ubuntu-24.04-minimal-cloudimg-amd64.qcow2"
+  #file_name = local.base_image_file
 
   url       = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  file_name = "noble-server-cloudimg-amd64.qcow2"
+  file_name = local.base_image_file
 
 }
 
@@ -68,7 +70,7 @@ module "server" {
   datastore_id = var.datastore_id
 
   ## VM
-  vm_id        = 111
+  vm_id        = 241
   hostname     = "k3s-server"
   user_name    = var.user_name
   user_passwd  = var.user_passwd
@@ -78,11 +80,11 @@ module "server" {
   main_server  = local.main_server
 
   disk = [{
-    import_from = data.proxmox_virtual_environment_file.ubuntu_noble.id != null ? data.proxmox_virtual_environment_file.ubuntu_noble.id : proxmox_virtual_environment_download_file.ubuntu_noble[0].id
+    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_virtual_environment_download_file.base_image[0].id
   }]
 
   ## Network
-  ip_addr     = 111
+  ip_addr     = 241
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
   dir_mapping = { name = proxmox_virtual_environment_hardware_mapping_dir.add.name }
@@ -103,7 +105,7 @@ module "worker" {
   datastore_id = var.datastore_id
 
   ## VM
-  vm_id        = 113
+  vm_id        = 245
   hostname     = "k3s-worker"
   user_name    = var.user_name
   user_passwd  = var.user_passwd
@@ -113,11 +115,11 @@ module "worker" {
   main_server  = local.main_server
   memory       = 1536
   disk = [{
-    import_from = data.proxmox_virtual_environment_file.ubuntu_noble.id != null ? data.proxmox_virtual_environment_file.ubuntu_noble.id : proxmox_virtual_environment_download_file.ubuntu_noble[0].id
+    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_virtual_environment_download_file.base_image[0].id
   }]
 
   ## Network
-  ip_addr     = 113
+  ip_addr     = 245
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
   dir_mapping = { name = proxmox_virtual_environment_hardware_mapping_dir.add.name }

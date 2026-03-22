@@ -140,6 +140,7 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
     sockets = var.cpu.sockets
     cores   = var.cpu.cores
     type    = var.cpu.type
+    limit   = var.cpu.sockets * var.cpu.cores
   }
 
   memory {
@@ -161,7 +162,7 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
     vlan_id  = var.vlan_id
   }
 
-  serial_device {}
+  serial_device { device = "socket" }
 
   rng { source = "/dev/random" }
 

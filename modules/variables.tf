@@ -176,7 +176,7 @@ variable "gw_as_dns" {
 variable "dns_servers" {
   description = " List of alternative DNS servers (e.g. 1.1.1.1, 8.8.8.8)"
   type        = list(string)
-  default     = ["1.1.1.1", "8.8.8.8"]
+  default     = ["10.0.0.3", "10.0.0.4"]
 
   validation {
     condition     = var.gw_as_dns || length(var.dns_servers) > 0

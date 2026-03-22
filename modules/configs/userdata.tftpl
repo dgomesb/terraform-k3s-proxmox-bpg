@@ -52,10 +52,10 @@ fs_setup:
 %{ endfor ~}
 
 mounts:
-  - [ "${dir_mapping.name}", "${dir_mapping.guest_path}", "virtiofs", "defaults", "0", "0" ]
+  - [ "${dir_mapping.name}", "${dir_mapping.guest_path}", "virtiofs", "defaults,noatime", "0", "0" ]
   - [ "swap", "none" ]
 %{ for idx, disk in extra_disks ~}
-  - [ "/dev/sd${disk.device_letter}1", "${disk.guest_path}", "ext4", "defaults", "0", "0" ]
+  - [ "/dev/sd${disk.device_letter}1", "${disk.guest_path}", "ext4", "defaults,noatime", "0", "0" ]
 %{ endfor ~}
 %{ endif ~}
 

@@ -6,7 +6,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.97.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.99 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
@@ -40,7 +40,7 @@ No modules.
 | <a name="input_datastore_id"></a> [datastore\_id](#input\_datastore\_id) | Name of the datastore on the selected Proxmox node. | `string` | n/a | yes |
 | <a name="input_dir_mapping"></a> [dir\_mapping](#input\_dir\_mapping) | Shared directory configuration to be mounted inside the VM.<br/><br/>Attributes:<br/>- name (string, required):<br/>    Name of the directory mapping in Proxmox.<br/><br/>- guest\_path (optional, string, default: "/mnt/shared"):<br/>    Path inside the guest VM where the directory will be mounted. | <pre>object({<br/>    name       = string<br/>    guest_path = optional(string, "/mnt/shared")<br/>  })</pre> | n/a | yes |
 | <a name="input_disk"></a> [disk](#input\_disk) | Main disk configuration. Additional disks can be attached to the VM using this list. | <pre>list(object({<br/>    datastore_id = optional(string, null) # Defaults to var.datastore_id in the resource if not specified<br/>    import_from  = optional(string, "")   # Source image to import from; not required when creating an empty disk<br/>    interface    = optional(string, "scsi0")<br/>    size         = optional(number, 40) # Disk size in GB<br/>    cache        = optional(string, "none")<br/>    iothread     = optional(bool, true)<br/>    backup       = optional(bool, false)<br/>    discard      = optional(string, "on")<br/>    ssd          = optional(bool, true)<br/>    file_format  = optional(string, "qcow2")<br/>    serial       = optional(number, null)<br/>    guest_path   = optional(string, null) # Mount point for additional disks (not an official provider argument)<br/>  }))</pre> | <pre>[<br/>  {}<br/>]</pre> | no |
-| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | List of alternative DNS servers (e.g. 1.1.1.1, 8.8.8.8) | `list(string)` | <pre>[<br/>  "1.1.1.1",<br/>  "8.8.8.8"<br/>]</pre> | no |
+| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | List of alternative DNS servers (e.g. 1.1.1.1, 8.8.8.8) | `list(string)` | <pre>[<br/>  "10.0.0.3",<br/>  "10.0.0.4"<br/>]</pre> | no |
 | <a name="input_gw_as_dns"></a> [gw\_as\_dns](#input\_gw\_as\_dns) | Whether to use the default gateway IP as one of the DNS servers | `bool` | `false` | no |
 | <a name="input_gw_ip"></a> [gw\_ip](#input\_gw\_ip) | Default network gateway IP. | `number` | `1` | no |
 | <a name="input_hostname"></a> [hostname](#input\_hostname) | Base hostname assigned to each VM instance. | `string` | n/a | yes |

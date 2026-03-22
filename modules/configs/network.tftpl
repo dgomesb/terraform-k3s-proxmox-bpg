@@ -12,7 +12,7 @@ network:
       dhcp4: true
 %{ else }
       addresses:
-      - ${address}
+      - "${address}"
       nameservers:
         addresses:
 %{ for srv in dns_servers }

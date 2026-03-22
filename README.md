@@ -37,15 +37,9 @@ The target storage must allow disk image import.
 Download the base image from the official Ubuntu URL and store it in your selected storage.
 This prevents the image from being downloaded again every time you run `terraform destroy`, allowing you to reuse the previously stored base image.
 
-I am currently tracking the following [issue](https://github.com/bpg/terraform-provider-proxmox/issues/2566) for potential improvements to this implementation.
+I am currently tracking the following [issue](https://github.com/bpg/terraform-provider-proxmox/issues/2717) for potential improvements to this implementation.
 
-The intention is to conditionally download the image only if it does not already exist. However, the following approach does not behave as expected:
-
-```hcl
-count = data.proxmox_virtual_environment_file.ubuntu_noble.id == null ? 1 : 0
-```
-
-Even though this conditional check does not work as intended, it is still possible to reuse the same base image as long as it has already been downloaded and is available in the target storage.
+The intention is to conditionally download the image only if it does not already exist.
 
 ---
 
@@ -71,14 +65,14 @@ project for making Proxmox provisioning with Terraform possible.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.3.5 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.97.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.99 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_external"></a> [external](#provider\_external) | 2.3.5 |
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.97.1 |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.99.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
 
 ## Modules
@@ -92,11 +86,11 @@ project for making Proxmox provisioning with Terraform possible.
 
 | Name | Type |
 |------|------|
-| [proxmox_virtual_environment_download_file.ubuntu_noble](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_download_file) | resource |
+| [proxmox_virtual_environment_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_download_file) | resource |
 | [proxmox_virtual_environment_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_hardware_mapping_dir) | resource |
 | [random_integer.token_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [external_external.k3s_version](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
-| [proxmox_virtual_environment_file.ubuntu_noble](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/data-sources/virtual_environment_file) | data source |
+| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/data-sources/files) | data source |
 
 ## Inputs
 
