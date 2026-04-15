@@ -6,7 +6,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.99 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.102.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
@@ -24,9 +24,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_vm) | resource |
+| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_vm) | resource |
 | [random_integer.serial](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 
 ## Inputs
@@ -35,6 +35,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_all_nodes"></a> [all\_nodes](#input\_all\_nodes) | Comma-separated list or string containing all cluster hostnames with their IP addresses. | `string` | n/a | yes |
 | <a name="input_bios"></a> [bios](#input\_bios) | VM bios, setting to `ovmf` will automatically create an EFI disk. | `string` | `"ovmf"` | no |
+| <a name="input_bridge_name"></a> [bridge\_name](#input\_bridge\_name) | The name of the network bridge | `string` | `"vmbr0"` | no |
 | <a name="input_count_vm"></a> [count\_vm](#input\_count\_vm) | Number of VM instances (nodes) to be created. | `number` | n/a | yes |
 | <a name="input_cpu"></a> [cpu](#input\_cpu) | CPU configuration for the VM. Servers require a minimum of 2 vCPUs, and agents require 1 vCPU. | <pre>object({<br/>    sockets = optional(number, 1)<br/>    cores   = optional(number, 2)<br/>    type    = optional(string, "host")<br/>  })</pre> | `{}` | no |
 | <a name="input_datastore_id"></a> [datastore\_id](#input\_datastore\_id) | Name of the datastore on the selected Proxmox node. | `string` | n/a | yes |

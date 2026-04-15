@@ -65,14 +65,14 @@ project for making Proxmox provisioning with Terraform possible.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.3.5 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.99 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.102.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_external"></a> [external](#provider\_external) | 2.3.5 |
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.99.0 |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.102.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
 
 ## Modules
@@ -86,11 +86,11 @@ project for making Proxmox provisioning with Terraform possible.
 
 | Name | Type |
 |------|------|
-| [proxmox_virtual_environment_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_download_file) | resource |
-| [proxmox_virtual_environment_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_hardware_mapping_dir) | resource |
+| [proxmox_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/download_file) | resource |
+| [proxmox_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/hardware_mapping_dir) | resource |
 | [random_integer.token_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [external_external.k3s_version](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
-| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/data-sources/files) | data source |
+| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/data-sources/files) | data source |
 
 ## Inputs
 

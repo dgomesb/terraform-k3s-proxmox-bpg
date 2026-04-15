@@ -3,7 +3,7 @@ locals {
   count_servers = 2
   count_workers = 3
 
-  k3s_version = "1.35.2+k3s1" ## https://github.com/k3s-io/k3s/releases
+  k3s_version = "1.35.3+k3s1" ## https://github.com/k3s-io/k3s/releases
 
   main_server = format("%s01.%s", module.server.hostname, var.net_domain[0])
 
@@ -26,7 +26,7 @@ resource "random_integer" "token_id" {
   min = 10000
 }
 
-resource "proxmox_virtual_environment_hardware_mapping_dir" "add" {
+resource "proxmox_hardware_mapping_dir" "add" {
   comment = "Where to save the k3s token"
   name    = "k3s"
   map = [{
@@ -41,7 +41,7 @@ data "proxmox_files" "base_image" {
   content_type = "import"
 }
 
-resource "proxmox_virtual_environment_download_file" "base_image" {
+resource "proxmox_download_file" "base_image" {
 
   count = length(local.search_base_image) == 0 ? 1 : 0
 
@@ -80,14 +80,14 @@ module "server" {
   main_server  = local.main_server
 
   disk = [{
-    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_virtual_environment_download_file.base_image[0].id
+    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_download_file.base_image[0].id
   }]
 
   ## Network
   ip_addr     = 241
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
-  dir_mapping = { name = proxmox_virtual_environment_hardware_mapping_dir.add.name }
+  dir_mapping = { name = proxmox_hardware_mapping_dir.add.name }
 
   tags = concat(var.tags, ["cp"])
 
@@ -115,14 +115,14 @@ module "worker" {
   main_server  = local.main_server
   memory       = 1536
   disk = [{
-    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_virtual_environment_download_file.base_image[0].id
+    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_download_file.base_image[0].id
   }]
 
   ## Network
   ip_addr     = 245
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
-  dir_mapping = { name = proxmox_virtual_environment_hardware_mapping_dir.add.name }
+  dir_mapping = { name = proxmox_hardware_mapping_dir.add.name }
 
   tags = concat(var.tags, ["worker"])
 

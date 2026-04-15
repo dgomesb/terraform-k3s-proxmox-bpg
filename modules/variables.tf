@@ -147,6 +147,12 @@ variable "vlan_id" {
   default     = null
 }
 
+variable "bridge_name" {
+  description = "The name of the network bridge"
+  type        = string
+  default     = "vmbr0"
+}
+
 variable "net_cidr" {
   description = "Network CIDR block (e.g., 192.168.0.0/24)."
   type        = string

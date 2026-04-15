@@ -155,8 +155,7 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
   }
 
   network_device {
-    enabled  = true
-    bridge   = "vmbr0"
+    bridge   = var.bridge_name
     model    = "virtio"
     firewall = true
     vlan_id  = var.vlan_id
