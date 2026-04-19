@@ -12,12 +12,8 @@ locals {
     module.worker.hosts_list
   )
 
-  base_image_file = "noble-server-cloudimg-amd64.qcow2"
-
-  search_base_image = [
-    for f in data.proxmox_files.base_image.files : f
-    if f.file_name == local.base_image_file
-  ]
+  base_image_url       = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  base_image_file_name = "noble-server-cloudimg-amd64.qcow2"
 
 }
 
@@ -36,14 +32,15 @@ resource "proxmox_hardware_mapping_dir" "add" {
 }
 
 data "proxmox_files" "base_image" {
-  node_name    = var.node_name
-  datastore_id = var.datastore_id
-  content_type = "import"
+  node_name       = var.node_name
+  datastore_id    = var.datastore_id
+  content_type    = "import"
+  file_name_regex = local.base_image_file_name
 }
 
 resource "proxmox_download_file" "base_image" {
 
-  count = length(local.search_base_image) == 0 ? 1 : 0
+  count = length(data.proxmox_files.base_image.files) == 0 ? 1 : 0
 
   node_name    = var.node_name
   datastore_id = var.datastore_id
@@ -53,8 +50,8 @@ resource "proxmox_download_file" "base_image" {
   #url       = "https://cloud-images.ubuntu.com/minimal/releases/noble/release/ubuntu-24.04-minimal-cloudimg-amd64.img"
   #file_name = local.base_image_file
 
-  url       = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  file_name = local.base_image_file
+  url       = local.base_image_url
+  file_name = local.base_image_file_name
 
 }
 
@@ -80,7 +77,7 @@ module "server" {
   main_server  = local.main_server
 
   disk = [{
-    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_download_file.base_image[0].id
+    import_from = try(data.proxmox_files.base_image.files[0].id, proxmox_download_file.base_image[0].id)
   }]
 
   ## Network
@@ -115,7 +112,7 @@ module "worker" {
   main_server  = local.main_server
   memory       = 1536
   disk = [{
-    import_from = length(local.search_base_image) > 0 ? local.search_base_image[0].id : proxmox_download_file.base_image[0].id
+    import_from = try(data.proxmox_files.base_image.files[0].id, proxmox_download_file.base_image[0].id)
   }]
 
   ## Network

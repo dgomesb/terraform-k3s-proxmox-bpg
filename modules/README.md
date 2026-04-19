@@ -6,7 +6,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.102.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.103.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
@@ -24,9 +24,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/virtual_environment_vm) | resource |
+| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_vm) | resource |
 | [random_integer.serial](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 
 ## Inputs

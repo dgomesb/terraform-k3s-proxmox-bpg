@@ -1,6 +1,6 @@
 # K3s on Proxmox
 
-> ⚠️ This code was tested on **Proxmox VE v9.1.5**.
+> ⚠️ This code was tested on **Proxmox VE v9.1.7**.
 
 This projetct provisions a kubernetes cluster using [K3s](https://k3s.io/) on a Proxmox VE server.
 You can either specify the k3s [version](https://github.com/k3s-io/k3s/releases) or allow the script to automatically install the latest stable release.
@@ -37,10 +37,6 @@ The target storage must allow disk image import.
 Download the base image from the official Ubuntu URL and store it in your selected storage.
 This prevents the image from being downloaded again every time you run `terraform destroy`, allowing you to reuse the previously stored base image.
 
-I am currently tracking the following [issue](https://github.com/bpg/terraform-provider-proxmox/issues/2717) for potential improvements to this implementation.
-
-The intention is to conditionally download the image only if it does not already exist.
-
 ---
 
 #### 3. Directory Mapping
@@ -65,14 +61,14 @@ project for making Proxmox provisioning with Terraform possible.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.3.5 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.102.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.103.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_external"></a> [external](#provider\_external) | 2.3.5 |
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.102.0 |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.103.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
 
 ## Modules
@@ -86,11 +82,11 @@ project for making Proxmox provisioning with Terraform possible.
 
 | Name | Type |
 |------|------|
-| [proxmox_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/download_file) | resource |
-| [proxmox_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/resources/hardware_mapping_dir) | resource |
+| [proxmox_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/download_file) | resource |
+| [proxmox_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/hardware_mapping_dir) | resource |
 | [random_integer.token_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [external_external.k3s_version](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
-| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.102.0/docs/data-sources/files) | data source |
+| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/data-sources/files) | data source |
 
 ## Inputs
 
