@@ -3,7 +3,7 @@ locals {
   count_servers = 2
   count_workers = 3
 
-  k3s_version = "1.35.3+k3s1" ## https://github.com/k3s-io/k3s/releases
+  k3s_version = "1.35.5+k3s1" ## https://github.com/k3s-io/k3s/releases
 
   main_server = format("%s01.%s", module.server.hostname, var.net_domain[0])
 
@@ -33,7 +33,7 @@ resource "proxmox_hardware_mapping_dir" "add" {
 
 data "proxmox_files" "base_image" {
   node_name       = var.node_name
-  datastore_id    = var.datastore_id
+  datastore_id    = coalesce(var.datastore_hdd, var.datastore_id)
   content_type    = "import"
   file_name_regex = local.base_image_file_name
 }
@@ -43,7 +43,7 @@ resource "proxmox_download_file" "base_image" {
   count = length(data.proxmox_files.base_image.files) == 0 ? 1 : 0
 
   node_name    = var.node_name
-  datastore_id = var.datastore_id
+  datastore_id = coalesce(var.datastore_hdd, var.datastore_id)
   content_type = "import"
 
   ## Ubuntu minimal does not support uefi
@@ -67,7 +67,7 @@ module "server" {
   datastore_id = var.datastore_id
 
   ## VM
-  vm_id        = 241
+  vm_id        = 211
   hostname     = "k3s-server"
   user_name    = var.user_name
   user_passwd  = var.user_passwd
@@ -81,7 +81,7 @@ module "server" {
   }]
 
   ## Network
-  ip_addr     = 241
+  ip_addr     = 211
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
   dir_mapping = { name = proxmox_hardware_mapping_dir.add.name }
@@ -102,7 +102,7 @@ module "worker" {
   datastore_id = var.datastore_id
 
   ## VM
-  vm_id        = 245
+  vm_id        = 213
   hostname     = "k3s-worker"
   user_name    = var.user_name
   user_passwd  = var.user_passwd
@@ -116,7 +116,7 @@ module "worker" {
   }]
 
   ## Network
-  ip_addr     = 245
+  ip_addr     = 213
   net_cidr    = var.net_cidr
   net_domain  = var.net_domain
   dir_mapping = { name = proxmox_hardware_mapping_dir.add.name }

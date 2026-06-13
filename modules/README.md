@@ -4,17 +4,17 @@
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.103.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.108.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.95.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
+| ---- | ------- |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.109.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.9.0 |
 
 ## Modules
 
@@ -23,16 +23,16 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
-| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_file) | resource |
-| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/virtual_environment_vm) | resource |
+| ---- | ---- |
+| [proxmox_virtual_environment_file.network_data](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_file.user_data](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_file) | resource |
+| [proxmox_virtual_environment_vm.k3s_node](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_vm) | resource |
 | [random_integer.serial](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_all_nodes"></a> [all\_nodes](#input\_all\_nodes) | Comma-separated list or string containing all cluster hostnames with their IP addresses. | `string` | n/a | yes |
 | <a name="input_bios"></a> [bios](#input\_bios) | VM bios, setting to `ovmf` will automatically create an EFI disk. | `string` | `"ovmf"` | no |
 | <a name="input_bridge_name"></a> [bridge\_name](#input\_bridge\_name) | The name of the network bridge | `string` | `"vmbr0"` | no |
@@ -63,7 +63,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_hostname"></a> [hostname](#output\_hostname) | n/a |
 | <a name="output_hosts_list"></a> [hosts\_list](#output\_hosts\_list) | List of servers to be created |
 | <a name="output_main_server_ip"></a> [main\_server\_ip](#output\_main\_server\_ip) | It will be used to ssh into and get the k3s version |

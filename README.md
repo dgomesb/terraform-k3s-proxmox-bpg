@@ -46,6 +46,19 @@ A Directory Mapping is required to allow the K3s Control Plane to share the clus
 - `Mapping.Modify`
 - `Mapping.Use`
 
+## Remote Administration
+
+If you have set up the SSH keys correctly and your personal computer can reach one of the servers, you can transfer the `config` file to your machine.
+
+> WARNING
+
+> This will override any existing cluster configuration.
+
+```bash
+mkdir "$HOME/.kube"
+scp -p ubuntu@hostname:~/.kube/config ~/.kube/config
+```
+
 ## Acknowledgements
 
 Thanks to the maintainers of the
@@ -58,42 +71,43 @@ project for making Proxmox provisioning with Terraform possible.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | >= 2.3.5 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.103.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.108.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.7.2 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_external"></a> [external](#provider\_external) | 2.3.5 |
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.103.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
+| ---- | ------- |
+| <a name="provider_external"></a> [external](#provider\_external) | 2.4.0 |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.109.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.9.0 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_server"></a> [server](#module\_server) | ./modules | n/a |
 | <a name="module_worker"></a> [worker](#module\_worker) | ./modules | n/a |
 
 ## Resources
 
 | Name | Type |
-|------|------|
-| [proxmox_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/download_file) | resource |
-| [proxmox_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/resources/hardware_mapping_dir) | resource |
+| ---- | ---- |
+| [proxmox_download_file.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/download_file) | resource |
+| [proxmox_hardware_mapping_dir.add](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/hardware_mapping_dir) | resource |
 | [random_integer.token_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [external_external.k3s_version](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
-| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/0.103.0/docs/data-sources/files) | data source |
+| [proxmox_files.base_image](https://registry.terraform.io/providers/bpg/proxmox/latest/docs/data-sources/files) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_datastore_hdd"></a> [datastore\_hdd](#input\_datastore\_hdd) | Alternative Proxmox datastore ID. | `string` | `null` | no |
 | <a name="input_datastore_id"></a> [datastore\_id](#input\_datastore\_id) | The Proxmox datastore ID where VM disks and snippets will be stored. | `string` | n/a | yes |
-| <a name="input_disk"></a> [disk](#input\_disk) | Disk(s) to be attached to the VM | <pre>list(object({<br/>    datastore_id = optional(string, null) ## on the resource it defaults to var.datastore_id<br/>    import_from  = optional(string, "")   ## not needed when creating an empty disk<br/>    interface    = optional(string, "scsi0")<br/>    size         = optional(number, 40)<br/>    cache        = optional(string, "none")<br/>    iothread     = optional(bool, true)<br/>    backup       = optional(bool, false)<br/>    discard      = optional(string, "on")<br/>    ssd          = optional(bool, true)<br/>    file_format  = optional(string, "qcow2")<br/>    serial       = optional(number, null)<br/>    guest_path   = optional(string, null) ## where to mount the extra disk. Not an official provider variable"<br/>  }))</pre> | <pre>[<br/>  {}<br/>]</pre> | no |
 | <a name="input_net_cidr"></a> [net\_cidr](#input\_net\_cidr) | Network CIDR block (e.g., 192.168.0.0/24). | `string` | n/a | yes |
 | <a name="input_net_domain"></a> [net\_domain](#input\_net\_domain) | Network domain name assigned to the VM. The first domain on the list is used as the default FQDN | `list(string)` | n/a | yes |
 | <a name="input_node_name"></a> [node\_name](#input\_node\_name) | The name of the Proxmox node where the virtual machines will be created. | `string` | n/a | yes |
@@ -110,7 +124,7 @@ project for making Proxmox provisioning with Terraform possible.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_all_nodes"></a> [all\_nodes](#output\_all\_nodes) | Shows what will be appended to /etc/hosts on each VM |
 | <a name="output_k3s_version"></a> [k3s\_version](#output\_k3s\_version) | k3s version to be installed on the nodes |
 <!-- END_TF_DOCS -->

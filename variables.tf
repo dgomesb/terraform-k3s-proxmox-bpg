@@ -1,4 +1,6 @@
-## Proxmox provider ##
+#--------------------#
+#  Proxmox provider  #
+#--------------------#
 
 variable "pve_api_url" {
   description = "The HTTPS URL of the Proxmox VE API endpoint (e.g., https://proxmox.example.com:8006/api2/json)."
@@ -47,7 +49,9 @@ variable "pve_ssh_private_key" {
 #  ephemeral   = true
 #}
 
-## Proxmox Node ##
+#--------------------#
+#    Proxmox Node    #
+#--------------------#
 
 variable "node_name" {
   description = "The name of the Proxmox node where the virtual machines will be created."
@@ -59,7 +63,15 @@ variable "datastore_id" {
   type        = string
 }
 
-## VM ##
+variable "datastore_hdd" {
+  description = "Alternative Proxmox datastore ID."
+  type        = string
+  default     = null
+}
+
+#--------------------#
+#        VMs         #
+#--------------------#
 
 variable "user_name" {
   description = "The default VM user name."
@@ -79,32 +91,15 @@ variable "ssh_pub_keys" {
   default     = []
 }
 
-variable "disk" {
-  description = "Disk(s) to be attached to the VM"
-  type = list(object({
-    datastore_id = optional(string, null) ## on the resource it defaults to var.datastore_id
-    import_from  = optional(string, "")   ## not needed when creating an empty disk
-    interface    = optional(string, "scsi0")
-    size         = optional(number, 40)
-    cache        = optional(string, "none")
-    iothread     = optional(bool, true)
-    backup       = optional(bool, false)
-    discard      = optional(string, "on")
-    ssd          = optional(bool, true)
-    file_format  = optional(string, "qcow2")
-    serial       = optional(number, null)
-    guest_path   = optional(string, null) ## where to mount the extra disk. Not an official provider variable"
-  }))
-  default = [{}]
-}
-
 variable "tags" {
   description = "Virtual machine tag(s)"
   type        = list(string)
   default     = ["k3s"]
 }
 
-## Network ##
+#--------------------#
+#      Network       #
+#--------------------#
 
 variable "net_cidr" {
   description = "Network CIDR block (e.g., 192.168.0.0/24)."

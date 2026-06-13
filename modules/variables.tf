@@ -1,4 +1,7 @@
-## Proxmox Node ##
+#--------------------#
+#    Proxmox Node    #
+#--------------------#
+
 variable "node_name" {
   description = "Name of the Proxmox node where the VM will be created."
   type        = string
@@ -9,14 +12,20 @@ variable "datastore_id" {
   type        = string
 }
 
-## k3s ##
+#--------------------#
+#        K3s         #
+#--------------------#
+
 variable "k3s_version" {
   description = "Version of k3s to be installed. If empty, the installation script will automatically select the latest stable version."
   type        = string
   default     = ""
 }
 
-## VM ##
+#--------------------#
+#        VMs         #
+#--------------------#
+
 variable "count_vm" {
   description = "Number of VM instances (nodes) to be created."
   type        = number
@@ -139,7 +148,9 @@ variable "tags" {
   default     = []
 }
 
-## Network ##
+#--------------------#
+#      Network       #
+#--------------------#
 
 variable "vlan_id" {
   description = "The VLAN identifier"
@@ -200,5 +211,3 @@ variable "net_domain" {
   }
 
 }
-
-

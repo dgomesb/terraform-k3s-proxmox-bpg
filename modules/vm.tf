@@ -132,7 +132,6 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
       ssd          = disk.value.ssd
       file_format  = disk.value.file_format
       serial       = random_integer.serial[count.index].result + disk.key
-      #serial       = (var.vm_id + count.index) * 5678 + disk.key
     }
   }
 
